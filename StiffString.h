@@ -13,6 +13,8 @@
 #include "leaflet.h"
 #include "Cycle.h"
 
+const int MAX_NUM_MODES = 100;
+
 class StiffString {
 public:
   StiffString(LEAF *leaf, int numModes);
@@ -35,9 +37,9 @@ private:
   LEAF *const leaf_;
   const int num_modes_;
 
-  Cycle **osc_;
-  float *amplitudes_;
-  float *output_weights_;
+  Cycle osc_[MAX_NUM_MODES];
+  float amplitudes_[MAX_NUM_MODES];
+  float output_weights_[MAX_NUM_MODES];
   float freq_hz_;
   float two_pi_times_inv_sample_rate_;
 

@@ -10,6 +10,7 @@ namespace {
 
 class Cycle {
 public:
+  Cycle() {}
   Cycle(float sample_rate);
   ~Cycle();
 
@@ -38,11 +39,11 @@ public:
   void set_sample_rate(float sr);
 
 private:
-  float sample_rate_;
   // Underlying phasor
   uint32_t phase_;
   int32_t inc_;
   float freq_;
+  float sample_rate_;
   float inv_sample_rate_times_two_to_32_;
 };
 
