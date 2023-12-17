@@ -2,8 +2,10 @@
 TARGET = StiffString
 
 # Sources
-CPP_SOURCES = main.cpp StiffString.cpp
+CPP_SOURCES = main.cpp StiffString.cpp Cycle.cpp
 C_SOURCES = leaflet.c
+
+GDBFLAGS += --fullname
 
 # Library Locations
 LIBDAISY_DIR = ../../DaisyExamples/libDaisy/

@@ -10,6 +10,7 @@
 
 #include "StiffString.h"
 #include "math.h"
+#include <new>
 
 StiffString::StiffString(LEAF *leaf, int numModes)
 : leaf_(leaf), num_modes_(numModes) {
@@ -17,26 +18,27 @@ StiffString::StiffString(LEAF *leaf, int numModes)
   tMempool *pool = leaf->mempool;
   amplitudes_ = (float *) mpool_alloc(numModes * sizeof(float), pool);
   output_weights_ = (float *) mpool_alloc(numModes * sizeof(float), pool);
-  osc_ = (tCycle **) mpool_alloc(numModes * sizeof(tCycle *), pool);
+  osc_ = (Cycle **) mpool_alloc(numModes * sizeof(Cycle *), pool);
   for (int i = 0; i < numModes; ++i) {
-    osc_[i] = tCycle_new(leaf_);
+    osc_[i] = (Cycle *) mpool_alloc(sizeof(Cycle), pool);
+    new (osc_[i]) Cycle(leaf->sampleRate);
   }
   UpdateOutputWeights();
 }
 
 StiffString::~StiffString() {
-  for (int i = 0; i < num_modes_; ++i) {
-    tCycle_free(osc_[i]);
-  }
   tMempool *pool = leaf_->mempool;
+  for (int i = 0; i < num_modes_; ++i) {
+    osc_[i]->~Cycle();
+    mpool_free(osc_[i], pool);
+  }
   mpool_free(osc_, pool);
   mpool_free(output_weights_, pool);
   mpool_free(amplitudes_, pool);
 }
 
-void StiffString::set_freq(float freq_hz)
-{
-    freq_hz = freq_hz;
+void StiffString::set_freq(float freq_hz) {
+    freq_hz_ = freq_hz;
     float kappa_sq = stiffness_ * stiffness_;
     for (int i = 0; i < num_modes_; ++i) {
         int n = i + 1;
@@ -47,32 +49,29 @@ void StiffString::set_freq(float freq_hz)
         float zeta = sig / w0;
         float w = w0 * sqrtf(1.0f - zeta * zeta);
         // float w = w0 * (1.0f - 0.5f * zeta * zeta);
-        tCycle_setFreq(osc_[i], freq_hz_ * w);
+        osc_[i]->set_freq(freq_hz_ * w);
     }
 }
 
-float StiffString::Tick()
-{
+float StiffString::Tick() {
     float sample = 0.0f;
     for (int i = 0; i < num_modes_; ++i) {
-        sample += tCycle_tick(osc_[i]) * amplitudes_[i] * output_weights_[i];
-        int n = i + 1;
-        float sig = decay_ + decay_high_freq_ * n * n;
-        //amplitudes[i] *= expf(-sig * freqHz * leaf->twoPiTimesInvSampleRate);
-        sig = LEAF_clip(0.f, sig, 1.f);
-        amplitudes_[i] *= 1.0f -sig * freq_hz_ * two_pi_times_inv_sample_rate_;
+      sample += osc_[i]->Tick() * amplitudes_[i] * output_weights_[i];
+      int n = i + 1;
+      float sig = decay_ + decay_high_freq_ * n * n;
+      //amplitudes[i] *= expf(-sig * freqHz * leaf->twoPiTimesInvSampleRate);
+      sig = LEAF_clip(0.f, sig, 1.f);
+      amplitudes_[i] *= 1.0f -sig * freq_hz_ * two_pi_times_inv_sample_rate_;
     }
     return sample;
 }
 
-void StiffString::set_pickup_pos(float newValue)
-{
+void StiffString::set_pickup_pos(float newValue) {
     pickup_pos_ = newValue;
     UpdateOutputWeights();
 }
 
-void StiffString::UpdateOutputWeights()
-{
+void StiffString::UpdateOutputWeights() {
     float x0 = pickup_pos_ * 0.5 * PI;
     for (int i = 0; i < num_modes_; ++i) {
         output_weights_[i] = sinf((i + 1) * x0);

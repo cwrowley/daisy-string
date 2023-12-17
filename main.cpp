@@ -11,7 +11,7 @@ StiffString *string = nullptr;
 const int LEAF_MEMORY_SIZE = 400 * (1 << 10);
 char leafMemory[LEAF_MEMORY_SIZE];
 
-const int NUM_MODES = 65;
+const int NUM_MODES = 60;
 
 volatile float _knob = 0.f;
 

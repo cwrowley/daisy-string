@@ -103,19 +103,6 @@ size_t leaf_pool_get_used(LEAF *leaf);
     
 void *leaf_pool_get_pool(LEAF *leaf);
 
-// leaf-oscillators.h
-
-typedef struct tCycle tCycle;
-
-tCycle *tCycle_new(LEAF *leaf);
-tCycle *tCycle_newFromPool(LEAF *leaf, tMempool *pool);
-void tCycle_free(tCycle *obj);
-
-Lfloat tCycle_tick(tCycle *obj);
-void tCycle_setFreq(tCycle *obj, Lfloat freq);
-void tCycle_setPhase(tCycle *obj, Lfloat phase);
-void tCycle_setSampleRate(tCycle *obj, Lfloat sr);
-
 #ifdef __cplusplus
 }
 #endif

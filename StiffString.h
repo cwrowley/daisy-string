@@ -11,6 +11,7 @@
 #pragma once
 
 #include "leaflet.h"
+#include "Cycle.h"
 
 class StiffString {
 public:
@@ -34,7 +35,7 @@ private:
   LEAF *const leaf_;
   const int num_modes_;
 
-  tCycle **osc_;
+  Cycle **osc_;
   float *amplitudes_;
   float *output_weights_;
   float freq_hz_;
