@@ -10,20 +10,22 @@
 
 #pragma once
 
-#include "leaflet.h"
 #include "Cycle.h"
 
 const int MAX_NUM_MODES = 100;
 
 class StiffString {
 public:
-  StiffString(LEAF *leaf, int numModes);
+  StiffString();
+  StiffString(float sample_rate, int num_modes);
   ~StiffString();
 
+  void Init(float sample_rate, int num_modes);
   void SetInitialAmplitudes();
   float Tick();
 
   // change parameters
+  void set_sample_rate(float sr);
   void set_freq(float newFreqHz);
   void set_stiffness(float newValue) { stiffness_ = newValue; }
   void set_pickup_pos(float newValue);
@@ -34,14 +36,14 @@ public:
 private:
   void UpdateOutputWeights();
 
-  LEAF *const leaf_;
-  const int num_modes_;
+  int num_modes_;
+  float sample_rate_;
+  float two_pi_by_sample_rate_;
 
   Cycle osc_[MAX_NUM_MODES];
   float amplitudes_[MAX_NUM_MODES];
   float output_weights_[MAX_NUM_MODES];
   float freq_hz_;
-  float two_pi_times_inv_sample_rate_;
 
   // parameters
   float stiffness_ = 0.001f;

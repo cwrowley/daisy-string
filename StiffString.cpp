@@ -12,17 +12,36 @@
 #include "math.h"
 #include <cassert>
 
-StiffString::StiffString(LEAF *leaf, int numModes)
-: leaf_(leaf), num_modes_(numModes) {
-  assert(numModes <= MAX_NUM_MODES);
-  two_pi_times_inv_sample_rate_ = leaf->twoPiTimesInvSampleRate;
-  for (int i = 0; i < numModes; ++i) {
-    osc_[i].set_sample_rate(leaf->sampleRate);
-  }
+const float PI = 4.0f * atanf(1.0f);
+const float TWO_PI = 2.0f * PI;
+
+StiffString::StiffString()
+: num_modes_(0), sample_rate_(0.f) {}
+
+StiffString::StiffString(float sample_rate, int num_modes)
+: num_modes_(num_modes) {
+  assert(num_modes <= MAX_NUM_MODES);
+  set_sample_rate(sample_rate);
   UpdateOutputWeights();
 }
 
 StiffString::~StiffString() {}
+
+void StiffString::Init(float sample_rate, int num_modes) {
+  num_modes_ = num_modes;
+  assert(num_modes <= MAX_NUM_MODES);
+  set_sample_rate(sample_rate);
+}
+
+void StiffString::set_sample_rate(float sample_rate) {
+  sample_rate_ = sample_rate;
+  two_pi_by_sample_rate_ = TWO_PI / sample_rate;
+  assert(num_modes_ > 0 && num_modes_ <= MAX_NUM_MODES);
+  for (int i = 0; i < num_modes_; ++i) {
+    osc_[i].set_sample_rate(sample_rate);
+  }
+
+}
 
 void StiffString::set_freq(float freq_hz) {
     freq_hz_ = freq_hz;
@@ -40,6 +59,15 @@ void StiffString::set_freq(float freq_hz) {
     }
 }
 
+inline float clip(float val, float min = 0.0f, float max = 1.0f) {
+  if (val < min) {
+    return min;
+  } else if (val < max) {
+    return val;
+  }
+  return max;
+}
+
 float StiffString::Tick() {
     float sample = 0.0f;
     for (int i = 0; i < num_modes_; ++i) {
@@ -47,8 +75,8 @@ float StiffString::Tick() {
       int n = i + 1;
       float sig = decay_ + decay_high_freq_ * n * n;
       //amplitudes[i] *= expf(-sig * freqHz * leaf->twoPiTimesInvSampleRate);
-      sig = LEAF_clip(0.f, sig, 1.f);
-      amplitudes_[i] *= 1.0f -sig * freq_hz_ * two_pi_times_inv_sample_rate_;
+      sig = clip(sig, 0.0f, 1.0f);
+      amplitudes_[i] *= 1.0f -sig * freq_hz_ * two_pi_by_sample_rate_;
     }
     return sample;
 }

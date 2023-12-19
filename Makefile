@@ -1,9 +1,8 @@
 # Project Name
-TARGET = StiffString
+TARGET = StringMidi
 
 # Sources
 CPP_SOURCES = main.cpp StiffString.cpp Cycle.cpp
-C_SOURCES = leaflet.c
 
 GDBFLAGS += --fullname
 
