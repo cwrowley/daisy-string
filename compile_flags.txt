@@ -1,0 +1,4 @@
+-I
+../../DaisyExamples/libDaisy/src/
+-I
+../../DaisyExamples/DaisySP/Source/
