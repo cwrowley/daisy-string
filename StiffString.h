@@ -5,6 +5,8 @@
     Created: 11 Dec 2023 7:55:35pm
     Author:  Clancy Rowley
 
+    Copyright 2023 Clarence W. Rowley
+
   ==============================================================================
 */
 
@@ -15,7 +17,7 @@
 const int MAX_NUM_MODES = 100;
 
 class StiffString {
-public:
+ public:
   StiffString();
   StiffString(float sample_rate, int num_modes);
   ~StiffString();
@@ -33,7 +35,7 @@ public:
   void set_decay(float newValue) { decay_ = newValue; }
   void set_decay_high_freq(float newValue) { decay_high_freq_ = newValue; }
 
-private:
+ private:
   void UpdateOutputWeights();
 
   int num_modes_;

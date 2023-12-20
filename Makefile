@@ -6,9 +6,11 @@ CPP_SOURCES = main.cpp StiffString.cpp Cycle.cpp
 
 GDBFLAGS += --fullname
 
+CPP_STANDARD = -std=c++14
+
 # Library Locations
 LIBDAISY_DIR = ../../DaisyExamples/libDaisy/
-DAISYSP_DIR = ../../DaisyExamples/DaisySP/
+# DAISYSP_DIR = ../../DaisyExamples/DaisySP/
 # LIBS += -lleaf
 # LIBDIR += -L ../../LEAF/leaf/build
 # C_INCLUDES += -I../../LEAF/leaf/Src -I../../LEAF/leaf/Inc/  -I../../LEAF/leaf/

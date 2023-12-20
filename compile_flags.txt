@@ -2,3 +2,4 @@
 ../../DaisyExamples/libDaisy/src/
 -I
 ../../DaisyExamples/DaisySP/Source/
+-std=c++14
