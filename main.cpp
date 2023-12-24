@@ -15,7 +15,7 @@
 daisy::DaisyPod hw;
 StiffString string;
 
-const int NUM_MODES = 60;
+const int NUM_MODES = 218;
 const float NOTE_OFF_DECAY = 0.01;
 
 volatile float _knob = 0.0f;

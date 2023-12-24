@@ -42,8 +42,7 @@ void StiffString::set_sample_rate(float sample_rate) {
   }
 }
 
-void StiffString::set_freq(float freq_hz) {
-  freq_hz_ = freq_hz;
+void StiffString::UpdateOscillators() {
   float kappa_sq = stiffness_ * stiffness_;
   for (int i = 0; i < num_modes_; ++i) {
     int n = i + 1;
@@ -55,7 +54,23 @@ void StiffString::set_freq(float freq_hz) {
     float w = w0 * sqrtf(1.0f - zeta * zeta);
     // float w = w0 * (1.0f - 0.5f * zeta * zeta);
     osc_[i].set_freq(freq_hz_ * w);
+    decay_rates_[i] = expf(-sig * freq_hz_ * two_pi_by_sample_rate_);
   }
+}
+
+void StiffString::set_decay(float newValue) {
+  decay_ = newValue;
+  UpdateOscillators();
+}
+
+void StiffString::set_decay_high_freq(float newValue) {
+  decay_high_freq_ = newValue;
+  UpdateOscillators();
+}
+
+void StiffString::set_freq(float freq_hz) {
+  freq_hz_ = freq_hz;
+  UpdateOscillators();
 }
 
 inline float clip(float val, float min = 0.0f, float max = 1.0f) {
@@ -71,11 +86,7 @@ float StiffString::Tick() {
   float sample = 0.0f;
   for (int i = 0; i < num_modes_; ++i) {
     sample += osc_[i].Tick() * amplitudes_[i] * output_weights_[i];
-    int n = i + 1;
-    float sig = decay_ + decay_high_freq_ * n * n;
-    // amplitudes[i] *= expf(-sig * freqHz * leaf->twoPiTimesInvSampleRate);
-    sig = clip(sig, 0.0f, 1.0f);
-    amplitudes_[i] *= 1.0f -sig * freq_hz_ * two_pi_by_sample_rate_;
+    amplitudes_[i] *= decay_rates_[i];
   }
   return sample;
 }

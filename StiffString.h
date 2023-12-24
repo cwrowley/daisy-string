@@ -13,8 +13,9 @@
 #pragma once
 
 #include "Cycle.h"
+// #include "Oscillator.h"
 
-const int MAX_NUM_MODES = 100;
+const int MAX_NUM_MODES = 400;
 
 class StiffString {
  public:
@@ -32,10 +33,11 @@ class StiffString {
   void set_stiffness(float newValue) { stiffness_ = newValue; }
   void set_pickup_pos(float newValue);
   void set_pluck_pos(float newValue) { pluck_pos_ = newValue; }
-  void set_decay(float newValue) { decay_ = newValue; }
-  void set_decay_high_freq(float newValue) { decay_high_freq_ = newValue; }
+  void set_decay(float newValue);
+  void set_decay_high_freq(float newValue);
 
  private:
+  void UpdateOscillators();
   void UpdateOutputWeights();
 
   int num_modes_;
@@ -44,6 +46,7 @@ class StiffString {
 
   Cycle osc_[MAX_NUM_MODES];
   float amplitudes_[MAX_NUM_MODES];
+  float decay_rates_[MAX_NUM_MODES];
   float output_weights_[MAX_NUM_MODES];
   float freq_hz_;
 
