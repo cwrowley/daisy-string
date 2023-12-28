@@ -54,7 +54,7 @@ void StiffString::UpdateOscillators() {
     float w = w0 * sqrtf(1.0f - zeta * zeta);
     // float w = w0 * (1.0f - 0.5f * zeta * zeta);
     osc_[i].set_freq(freq_hz_ * w);
-    decay_rates_[i] = expf(-sig * freq_hz_ * two_pi_by_sample_rate_);
+    osc_[i].set_decay(freq_hz_ * sig);
   }
 }
 
@@ -86,7 +86,6 @@ float StiffString::Tick() {
   float sample = 0.0f;
   for (int i = 0; i < num_modes_; ++i) {
     sample += osc_[i].Tick() * amplitudes_[i] * output_weights_[i];
-    amplitudes_[i] *= decay_rates_[i];
   }
   return sample;
 }
@@ -109,6 +108,6 @@ void StiffString::SetInitialAmplitudes() {
     int n = i + 1;
     float denom = n * n * x0 * (PI - x0);
     amplitudes_[i] = 2.0f * sinf(x0 * n) / denom;
-    // osc_[i].ResetPhase();
+    osc_[i].Reset();
   }
 }

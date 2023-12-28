@@ -2,7 +2,7 @@
 TARGET = StringMidi
 
 # Sources
-CPP_SOURCES = main.cpp StiffString.cpp Oscillator.cpp
+CPP_SOURCES = main.cpp StiffString.cpp DampedOscillator.cpp
 
 GDBFLAGS += --fullname
 

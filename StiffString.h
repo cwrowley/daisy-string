@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "Oscillator.h"
+#include "DampedOscillator.h"
 
 const int MAX_NUM_MODES = 400;
 
@@ -43,9 +43,8 @@ class StiffString {
   float sample_rate_;
   float two_pi_by_sample_rate_;
 
-  Oscillator osc_[MAX_NUM_MODES];
+  DampedOscillator osc_[MAX_NUM_MODES];
   float amplitudes_[MAX_NUM_MODES];
-  float decay_rates_[MAX_NUM_MODES];
   float output_weights_[MAX_NUM_MODES];
   float freq_hz_;
 
