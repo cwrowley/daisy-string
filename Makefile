@@ -2,7 +2,7 @@
 TARGET = StringMidi
 
 # Sources
-CPP_SOURCES = main.cpp StiffString.cpp Cycle.cpp
+CPP_SOURCES = main.cpp StiffString.cpp Oscillator.cpp
 
 GDBFLAGS += --fullname
 

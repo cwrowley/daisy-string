@@ -12,8 +12,7 @@
 
 #pragma once
 
-#include "Cycle.h"
-// #include "Oscillator.h"
+#include "Oscillator.h"
 
 const int MAX_NUM_MODES = 400;
 
@@ -44,7 +43,7 @@ class StiffString {
   float sample_rate_;
   float two_pi_by_sample_rate_;
 
-  Cycle osc_[MAX_NUM_MODES];
+  Oscillator osc_[MAX_NUM_MODES];
   float amplitudes_[MAX_NUM_MODES];
   float decay_rates_[MAX_NUM_MODES];
   float output_weights_[MAX_NUM_MODES];

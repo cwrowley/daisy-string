@@ -109,5 +109,6 @@ void StiffString::SetInitialAmplitudes() {
     int n = i + 1;
     float denom = n * n * x0 * (PI - x0);
     amplitudes_[i] = 2.0f * sinf(x0 * n) / denom;
+    // osc_[i].ResetPhase();
   }
 }
